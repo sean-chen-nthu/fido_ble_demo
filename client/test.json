@@ -1,0 +1,148 @@
+{
+  "registerChallenge": {
+    "publicKey": {
+      "challenge": "b596vhb5jN0ARwNqkYnDiIM9V22CDk5GW3XWDf22RoU=",
+      "rp": { "name": "IoT Device", "id": "localhost" },
+      "user": {
+        "name": "sean",
+        "displayName": "sean",
+        "id": "AQAAAAAAAAAAAA=="
+      },
+      "pubKeyCredParams": [
+        { "type": "public-key", "alg": -7 },
+        { "type": "public-key", "alg": -35 },
+        { "type": "public-key", "alg": -36 },
+        { "type": "public-key", "alg": -257 },
+        { "type": "public-key", "alg": -258 },
+        { "type": "public-key", "alg": -259 },
+        { "type": "public-key", "alg": -37 },
+        { "type": "public-key", "alg": -38 },
+        { "type": "public-key", "alg": -39 },
+        { "type": "public-key", "alg": -8 }
+      ],
+      "authenticatorSelection": {
+        "requireResidentKey": false,
+        "userVerification": "preferred"
+      },
+      "timeout": 60000
+    }
+  },
+  "registerCredential": {
+    "id": "AfeWS16l7oxBQEaKZmrNsFkq0MMUYDJQyQIFOKY8fcvYbhiXzADbgfvlDWfYn4R_Jz9zTA",
+    "rawId": "AfeWS16l7oxBQEaKZmrNsFkq0MMUYDJQyQIFOKY8fcvYbhiXzADbgfvlDWfYn4R_Jz9zTA",
+    "type": "public-key",
+    "response": {
+      "attestationObject": "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YVi4SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2NFX9rbRq3OAAI1vMYKZIsLJfHwVQMANAH3lktepe6MQUBGimZqzbBZKtDDFGAyUMkCBTimPH3L2G4Yl8wA24H75Q1n2J-Efyc_c0ylAQIDJiABIVgg-BGqsEpXeJFBFVFYtHO0niCKXsXXJ04z998H9_x8WqEiWCD4KXj9lifjCajGnYDnOua7oWmAbqoBm_7Vhjm2pl2qCg",
+      "clientDataJSON": "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiYjU5NnZoYjVqTjBBUndOcWtZbkRpSU05VjIyQ0RrNUdXM1hXRGYyMlJvVSIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImNyb3NzT3JpZ2luIjpmYWxzZX0"
+    }
+  },
+  "registerCredentialParsed": {
+    "ID": "AfeWS16l7oxBQEaKZmrNsFkq0MMUYDJQyQIFOKY8fcvYbhiXzADbgfvlDWfYn4R_Jz9zTA",
+    "Type": "public-key",
+    "rawId": "AfeWS16l7oxBQEaKZmrNsFkq0MMUYDJQyQIFOKY8fcvYbhiXzADbgfvlDWfYn4R/Jz9zTA==",
+    "Response": {
+      "CollectedClientData": {
+        "type": "webauthn.create",
+        "challenge": "b596vhb5jN0ARwNqkYnDiIM9V22CDk5GW3XWDf22RoU",
+        "origin": "http://localhost:8080"
+      },
+      "AttestationObject": {
+        "AuthData": {
+          "rpid": "SZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2M=",
+          "flags": 69,
+          "sign_count": 1608178502,
+          "att_data": {
+            "aaguid": "rc4AAjW8xgpkiwsl8fBVAw==",
+            "credential_id": "AfeWS16l7oxBQEaKZmrNsFkq0MMUYDJQyQIFOKY8fcvYbhiXzADbgfvlDWfYn4R/Jz9zTA==",
+            "public_key": "pSFYIPgRqrBKV3iRQRVRWLRztJ4gil7F1ydOM/ffB/f8fFqhIlgg+Cl4/ZYn4wmoxp2A5zrmu6FpgG6qAZv+1YY5tqZdqgoBAgMmIAE="
+          },
+          "ext_data": null
+        },
+        "authData": "SZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NFX9rbRq3OAAI1vMYKZIsLJfHwVQMANAH3lktepe6MQUBGimZqzbBZKtDDFGAyUMkCBTimPH3L2G4Yl8wA24H75Q1n2J+Efyc/c0ylAQIDJiABIVgg+BGqsEpXeJFBFVFYtHO0niCKXsXXJ04z998H9/x8WqEiWCD4KXj9lifjCajGnYDnOua7oWmAbqoBm/7Vhjm2pl2qCg==",
+        "fmt": "none"
+      }
+    },
+    "Raw": {
+      "id": "AfeWS16l7oxBQEaKZmrNsFkq0MMUYDJQyQIFOKY8fcvYbhiXzADbgfvlDWfYn4R_Jz9zTA",
+      "type": "public-key",
+      "rawId": "AfeWS16l7oxBQEaKZmrNsFkq0MMUYDJQyQIFOKY8fcvYbhiXzADbgfvlDWfYn4R_Jz9zTA",
+      "response": {
+        "clientDataJSON": "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiYjU5NnZoYjVqTjBBUndOcWtZbkRpSU05VjIyQ0RrNUdXM1hXRGYyMlJvVSIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImNyb3NzT3JpZ2luIjpmYWxzZX0",
+        "attestationObject": "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YVi4SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2NFX9rbRq3OAAI1vMYKZIsLJfHwVQMANAH3lktepe6MQUBGimZqzbBZKtDDFGAyUMkCBTimPH3L2G4Yl8wA24H75Q1n2J-Efyc_c0ylAQIDJiABIVgg-BGqsEpXeJFBFVFYtHO0niCKXsXXJ04z998H9_x8WqEiWCD4KXj9lifjCajGnYDnOua7oWmAbqoBm_7Vhjm2pl2qCg"
+      }
+    }
+  },
+  "loginChallenge": {
+    "publicKey": {
+      "challenge": "r3eVbUTsqM8C9URHaLp9oIDMtyPeDNtH/6Pf8LEusyw=",
+      "timeout": 60000,
+      "rpId": "localhost",
+      "allowCredentials": [
+        {
+          "type": "public-key",
+          "id": "AfeWS16l7oxBQEaKZmrNsFkq0MMUYDJQyQIFOKY8fcvYbhiXzADbgfvlDWfYn4R/Jz9zTA=="
+        }
+      ]
+    }
+  },
+  "loginAssertion": {
+    "username": "sean",
+    "assertion": {
+      "id": "AfeWS16l7oxBQEaKZmrNsFkq0MMUYDJQyQIFOKY8fcvYbhiXzADbgfvlDWfYn4R_Jz9zTA",
+      "rawId": "AfeWS16l7oxBQEaKZmrNsFkq0MMUYDJQyQIFOKY8fcvYbhiXzADbgfvlDWfYn4R_Jz9zTA",
+      "type": "public-key",
+      "response": {
+        "authenticatorData": "SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2MFX9rbTQ",
+        "clientDataJSON": "eyJ0eXBlIjoid2ViYXV0aG4uZ2V0IiwiY2hhbGxlbmdlIjoicjNlVmJVVHNxTThDOVVSSGFMcDlvSURNdHlQZUROdEhfNlBmOExFdXN5dyIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImNyb3NzT3JpZ2luIjpmYWxzZX0",
+        "signature": "MEUCIQDuePcREf1EmLU59XTUE8O23IjTFICO11huggIzfvAo5QIgaVBJiXkAlXslFQoyNvZNlhh479u6fj0B_KkIx6PYroA",
+        "userHandle": "AQAAAAAAAAAAAA"
+      }
+    }
+  },
+  "loginAssertionParsed": {
+    "ID": "AfeWS16l7oxBQEaKZmrNsFkq0MMUYDJQyQIFOKY8fcvYbhiXzADbgfvlDWfYn4R_Jz9zTA",
+    "Type": "public-key",
+    "rawId": "AfeWS16l7oxBQEaKZmrNsFkq0MMUYDJQyQIFOKY8fcvYbhiXzADbgfvlDWfYn4R/Jz9zTA==",
+    "Response": {
+      "CollectedClientData": {
+        "type": "webauthn.get",
+        "challenge": "r3eVbUTsqM8C9URHaLp9oIDMtyPeDNtH_6Pf8LEusyw",
+        "origin": "http://localhost:8080"
+      },
+      "AuthenticatorData": {
+        "rpid": "SZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2M=",
+        "flags": 5,
+        "sign_count": 1608178509,
+        "att_data": {
+          "aaguid": null,
+          "credential_id": null,
+          "public_key": null
+        },
+        "ext_data": null
+      },
+      "Signature": "MEUCIQDuePcREf1EmLU59XTUE8O23IjTFICO11huggIzfvAo5QIgaVBJiXkAlXslFQoyNvZNlhh479u6fj0B/KkIx6PYroA=",
+      "UserHandle": "AQAAAAAAAAAAAA=="
+    },
+    "Raw": {
+      "id": "AfeWS16l7oxBQEaKZmrNsFkq0MMUYDJQyQIFOKY8fcvYbhiXzADbgfvlDWfYn4R_Jz9zTA",
+      "type": "public-key",
+      "rawId": "AfeWS16l7oxBQEaKZmrNsFkq0MMUYDJQyQIFOKY8fcvYbhiXzADbgfvlDWfYn4R_Jz9zTA",
+      "response": {
+        "clientDataJSON": "eyJ0eXBlIjoid2ViYXV0aG4uZ2V0IiwiY2hhbGxlbmdlIjoicjNlVmJVVHNxTThDOVVSSGFMcDlvSURNdHlQZUROdEhfNlBmOExFdXN5dyIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImNyb3NzT3JpZ2luIjpmYWxzZX0",
+        "authenticatorData": "SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2MFX9rbTQ",
+        "signature": "MEUCIQDuePcREf1EmLU59XTUE8O23IjTFICO11huggIzfvAo5QIgaVBJiXkAlXslFQoyNvZNlhh479u6fj0B_KkIx6PYroA",
+        "userHandle": "AQAAAAAAAAAAAA"
+      }
+    }
+  },
+  "credential": {
+    "ID": "AfeWS16l7oxBQEaKZmrNsFkq0MMUYDJQyQIFOKY8fcvYbhiXzADbgfvlDWfYn4R/Jz9zTA==",
+    "PublicKey": "pSFYIPgRqrBKV3iRQRVRWLRztJ4gil7F1ydOM/ffB/f8fFqhIlgg+Cl4/ZYn4wmoxp2A5zrmu6FpgG6qAZv+1YY5tqZdqgoBAgMmIAE=",
+    "AttestationType": "none",
+    "Authenticator": {
+      "AAGUID": "rc4AAjW8xgpkiwsl8fBVAw==",
+      "SignCount": 1608178502,
+      "CloneWarning": false
+    }
+  }
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "ID": "AZTcAMG4ClEi0CVFAswQDKwv2c/8C8iH8AeLfp32J+XZXZyTEhgsXeNfdAHDPbXAHUu1gw==",
+    "PublicKey": "pQECAyYgASFYIEZgkcaQE/g9KfvOifnwPiU7pASgJYDzo9wwdYhrBoBLIlggWaIhOaTpoYPZ42RNKzi5ujyUrE1mjC94pTAFUqjkaeg=",
+    "AttestationType": "none",
+    "Authenticator": {
+      "AAGUID": "rc4AAjW8xgpkiwsl8fBVAw==",
+      "SignCount": 1608177443,
+      "CloneWarning": false
+    }
+  }
+]

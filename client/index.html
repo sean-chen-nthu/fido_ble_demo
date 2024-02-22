@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>WebAuthn Demo</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+</head>
+
+<body>
+  <!-- Username: -->
+  <br />
+  <!-- <input type="text" name="username" id="email" placeholder="i.e. foo@bar.com"> -->
+  <span>Device name:</span>
+  <input type="text" id="deviceName" value="Gophers" />
+  <!-- <span>Write count:</span>
+  <input type="text" id="count">
+  <br /> -->
+  <span>username:</span>
+  <input type="text" id="username" value="sean">
+  <br />
+  <br />
+  <button onclick="discover()">Discover</button>
+  <button onclick="register()">Register</button>
+  <button onclick="login()">Login</button>
+
+  <script>
+    var webauthnServiceUUID = '09fc95c0-c111-11e3-9904-0002a5d5c51b'
+    var webauthnService
+
+    var registerBeginUUID = '11fac9e2-c111-11e3-9246-0002a5d5c51b'
+    var registerBeginCharacteristic
+
+    var registerFinishUUID = '11fac9e4-c111-11e3-9246-0002a5d5c51b'
+    var registerFinishCharacteristic
+
+    var loginBeginUUID = '11fac9e1-c111-11e3-9246-0002a5d5c51b'
+    var loginBeginCharacteristic
+
+    var loginFinishUUID = '11fac9e3-c111-11e3-9246-0002a5d5c51b'
+    var loginFinishCharacteristic
+
+    $(document).ready(function () {
+
+      // check whether current browser supports WebAuthn
+      if (!window.PublicKeyCredential) {
+        alert("Error: this browser does not support WebAuthn");
+        return;
+      }
+    });
+
+    // Base64 to ArrayBuffer
+    function bufferDecode(value) {
+      return Uint8Array.from(atob(value), c => c.charCodeAt(0));
+    }
+
+    // ArrayBuffer to URLBase64
+    function bufferEncode(value) {
+      return btoa(String.fromCharCode.apply(null, new Uint8Array(value)))
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=/g, "");;
+    }
+
+    function discover() {
+      let filters = [];
+      let options = {};
+
+      // // filter by service uuid
+      // let filterService = document.querySelector('#service').value;
+      // if (filterService.startsWith('0x')) {
+      //   filterService = parseInt(filterService);
+      // }
+      // if (filterService) {
+      //   filters.push({services: [filterService]});
+      // }
+
+      let filterName = document.querySelector("#deviceName").value;
+      if (filterName) {
+        filters.push({ name: filterName });
+      }
+
+      // let optionalServices = ''.split(/, ?/)
+      //   .map((s) => (s.startsWith("0x") ? parseInt(s) : s))
+      //   .filter((s) => s && BluetoothUUID.getService);
+      // options.optionalServices = optionalServices;
+
+      // // filter by name prefix
+      // let filterNamePrefix = document.querySelector('#namePrefix').value;
+      // if (filterNamePrefix) {
+      //   filters.push({namePrefix: filterNamePrefix});
+      // }
+
+      // discover all device or not
+      if (0 >= filters.length) {
+        options.acceptAllDevices = true;
+      } else {
+        options.filters = filters;
+      }
+
+      options.optionalServices = [0x180F, '09fc95c0-c111-11e3-9904-0002a5d5c51b'];
+      console.log("options", options);
+
+      // discover
+      console.log("Requesting Bluetooth Device...");
+      navigator.bluetooth
+        .requestDevice(options)
+        .then((device) => {
+          // connect with selected device
+          return device.gatt.connect();
+        })
+        .then((server) => {
+          // get service from device
+          console.log("Getting Services...", server);
+          return server.getPrimaryServices();
+        })
+        .then((services) => {
+          console.log("Getting Characteristics...", services);
+          // let queue = Promise.resolve();
+          // iterate all service
+          services.forEach((service) => {
+            // queue = queue.then((_) =>
+            // get characteristics from each service
+            service.getCharacteristics().then((characteristics) => {
+              console.log("> Service: " + service.uuid);
+              // console.log(service);
+              // iterate all characteristic
+              characteristics.forEach((characteristic) => {
+
+                switch (characteristic.uuid) {
+                  case '11fac9e2-c111-11e3-9246-0002a5d5c51b':
+                    registerBeginCharacteristic = characteristic
+                    break;
+                  case '11fac9e4-c111-11e3-9246-0002a5d5c51b':
+                    registerFinishCharacteristic = characteristic
+                    break;
+                  case '11fac9e1-c111-11e3-9246-0002a5d5c51b':
+                    loginBeginCharacteristic = characteristic
+                    break;
+                  case '11fac9e3-c111-11e3-9246-0002a5d5c51b':
+                    loginFinishCharacteristic = characteristic
+                    break;
+                  case '00002a19-0000-1000-8000-00805f9b34fb':
+                    dec = new TextDecoder('utf-8')
+                    characteristic.readValue().then(value => {
+                      console.log('value', value.getUint8(0))
+                    })
+                    break;
+
+                  default:
+                    break;
+                }
+                // property : authenticatedSignedWrites/broadcast/indicate/notify/read/reliableWrite/writableAuxiliaries/write/writeWithoutResponse
+                var properties = getSupportedProperties(characteristic)
+                console.log(
+                  ">> Characteristic: " +
+                  characteristic.uuid +
+                  " " + properties
+                );
+                // console.log(characteristic);
+              });
+            })
+            // );
+          });
+          // return queue;
+        })
+        .catch((error) => {
+          console.log("Argh! " + error);
+        });
+    }
+
+    function getSupportedProperties(characteristic) {
+      let supportedProperties = [];
+      for (const p in characteristic.properties) {
+        if (characteristic.properties[p] === true) {
+          // if ('11fac9e0-c111-11e3-9246-0002a5d5c51b' === characteristic.uuid) {
+          //   let value = await characteristic.readValue();
+          //   dec = new TextDecoder("utf-8");
+          //   value = dec.decode(value)
+          //   console.log(characteristic.uuid, value)
+          // }
+          // if ("READ" === p.toUpperCase()) {
+          //   let value = await characteristic.readValue();
+          //   dec = new TextDecoder("utf-8");
+          //   value = dec.decode(value)
+          //   console.log(characteristic.uuid, value)
+          // }
+
+          // if ("WRITE" === p.toUpperCase() && '1c927b50-c116-11e3-8a33-0800200c9a66' === characteristic.uuid) {
+          //   console.log('test');
+          //   var enc = new TextEncoder();
+          //   // await characteristic.writeValue(enc.encode(1))
+          //   characteristic.writeValue(enc.encode('test'))
+          //     .then(_ => {
+          //       console.log('write test done');
+          //       characteristic.readValue().then(value => {
+
+          //         dec = new TextDecoder("utf-8");
+          //         value = dec.decode(value)
+          //         console.log(characteristic.uuid, value)
+          //       });
+          //     })
+          // }
+
+          supportedProperties.push(p.toUpperCase());
+        }
+      }
+      return "[" + supportedProperties.join(", ") + "]";
+    }
+
+    async function register() {
+      var registerChallengeArr = []
+      var registerChallenge
+      var enc = new TextEncoder();
+      var dec = new TextDecoder("utf-8");
+      var isReading = true
+      var packageArr = []
+      var count = 0
+
+      var username = $("#username").val()
+      if (username === "") {
+        alert("Please enter a username");
+        return;
+      }
+      console.log('register start', registerBeginUUID, registerFinishUUID);
+      await registerBeginCharacteristic.writeValueWithResponse(enc.encode(username))
+      console.log('write done', username);
+      while (isReading) {
+        count++
+        if (count == 10) {
+          isReading = false
+          break
+        }
+
+        value = await registerBeginCharacteristic.readValue()
+        value = dec.decode(value)
+
+        if ('END' === value) {
+          isReading = false
+        } else {
+          registerChallengeArr.push(value)
+        }
+      }
+      registerChallenge = registerChallengeArr.join('')
+      console.log('challenge received');
+
+      console.log('register begin challenge:', registerChallenge)
+      credentialCreationOptions = JSON.parse(registerChallenge)
+      console.log(credentialCreationOptions)
+      credentialCreationOptions.publicKey.challenge = bufferDecode(credentialCreationOptions.publicKey.challenge);
+      credentialCreationOptions.publicKey.user.id = bufferDecode(credentialCreationOptions.publicKey.user.id);
+      if (credentialCreationOptions.publicKey.excludeCredentials) {
+        for (var i = 0; i < credentialCreationOptions.publicKey.excludeCredentials.length; i++) {
+          credentialCreationOptions.publicKey.excludeCredentials[i].id = bufferDecode(credentialCreationOptions.publicKey.excludeCredentials[i].id);
+        }
+      }
+
+      var credential = await navigator.credentials.create({
+        publicKey: credentialCreationOptions.publicKey
+      })
+
+      console.log('credential created', credential)
+      // console.log(JSON.stringify(credential))
+      let attestationObject = credential.response.attestationObject;
+      let clientDataJSON = credential.response.clientDataJSON;
+      let rawId = credential.rawId;
+
+      console.log('client send to rp using web bluetooth:')
+
+      var registerFinishData = JSON.stringify({
+        username: username,
+        credential: {
+          id: credential.id,
+          rawId: bufferEncode(rawId),
+          type: credential.type,
+          response: {
+            attestationObject: bufferEncode(attestationObject),
+            clientDataJSON: bufferEncode(clientDataJSON),
+          },
+        }
+      })
+
+      registerFinishData = enc.encode(registerFinishData)
+
+      if (0 === registerFinishData.length % 250) {
+        packageNum = registerFinishData.length / 250
+      } else {
+        packageNum = Math.floor(registerFinishData.length / 250) + 1
+      }
+
+      for (let index = 0; index < packageNum; index++) {
+        var registerFinishDataSlice = registerFinishData.slice(index * 250, (index + 1) * 250);
+        await registerFinishCharacteristic.writeValueWithResponse(registerFinishDataSlice)
+      }
+      await registerFinishCharacteristic.writeValueWithResponse(enc.encode("END"))
+      var status = await registerFinishCharacteristic.readValue()
+      if (status) {
+        console.log('register success', dec.decode(status));
+      }
+      else {
+        console.log('register failed', dec.decode(status));
+      }
+    }
+
+    async function login() {
+      var loginChallengeArr = []
+      var loginChallenge
+      var enc = new TextEncoder();
+      var dec = new TextDecoder("utf-8");
+      var isReading = true
+      var packageArr = []
+      var count = 0
+
+      var username = $("#username").val()
+      if (username === "") {
+        alert("Please enter a username");
+        return;
+      }
+      console.log('login start', loginBeginUUID, loginFinishUUID);
+
+      // username = enc.encode(username)
+      await loginBeginCharacteristic.writeValueWithResponse(enc.encode(username))
+
+      console.log('write done', username);
+
+      while (isReading) {
+        count++
+        if (count == 10) {
+          isReading = false
+          break
+        }
+
+        value = await loginBeginCharacteristic.readValue()
+        value = dec.decode(value)
+        if ("false" === value) {
+          alert("no such user")
+          return
+        }
+
+        if ('END' === value) {
+          isReading = false
+        } else {
+          loginChallengeArr.push(value)
+        }
+      }
+
+      loginChallenge = loginChallengeArr.join('')
+      console.log('challenge received');
+
+      console.log('login begin challenge:', loginChallenge)
+      credentialRequestOptions = JSON.parse(loginChallenge)
+
+
+      credentialRequestOptions.publicKey.challenge = bufferDecode(credentialRequestOptions.publicKey.challenge);
+      credentialRequestOptions.publicKey.allowCredentials.forEach(function (listItem) {
+        listItem.id = bufferDecode(listItem.id)
+      });
+
+      var assertion = await navigator.credentials.get({
+        publicKey: credentialRequestOptions.publicKey
+      })
+      console.log('get assertion', (assertion))
+      // console.log(JSON.stringify(assertion))
+
+      let authData = assertion.response.authenticatorData;
+      let clientDataJSON = assertion.response.clientDataJSON;
+      let rawId = assertion.rawId;
+      let sig = assertion.response.signature;
+      let userHandle = assertion.response.userHandle;
+
+      console.log('client send to rp using web bluetooth')
+      var loginFinishData = JSON.stringify({
+        username: username,
+        assertion: {
+          id: assertion.id,
+          rawId: bufferEncode(rawId),
+          type: assertion.type,
+          response: {
+            authenticatorData: bufferEncode(authData),
+            clientDataJSON: bufferEncode(clientDataJSON),
+            signature: bufferEncode(sig),
+            userHandle: bufferEncode(userHandle),
+          },
+        }
+      })
+
+
+      loginFinishData = enc.encode(loginFinishData)
+
+      if (0 === loginFinishData.length % 250) {
+        packageNum = loginFinishData.length / 250
+      } else {
+        packageNum = Math.floor(loginFinishData.length / 250) + 1
+      }
+
+      for (let index = 0; index < packageNum; index++) {
+        var loginFinishDataSlice = loginFinishData.slice(index * 250, (index + 1) * 250);
+        await loginFinishCharacteristic.writeValueWithResponse(loginFinishDataSlice)
+      }
+      await loginFinishCharacteristic.writeValueWithResponse(enc.encode("END"))
+      var status = await loginFinishCharacteristic.readValue()
+      if (status) {
+        console.log('login success', dec.decode(status));
+      }
+      else {
+        console.log('login failed', dec.decode(status));
+      }
+    }
+
+
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+  </script>
+</body>
+
+</html>
